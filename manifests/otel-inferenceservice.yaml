@@ -1,0 +1,26 @@
+apiVersion: serving.kserve.io/v1beta1
+kind: InferenceService
+metadata:
+  name: iris-otel
+  namespace: iris
+  annotations:
+    openshift.io/display-name: "Iris OpenTelemetry"
+    serving.kserve.io/deploymentMode: RawDeployment
+spec:
+  predictor:
+    serviceAccountName: minio-storage-sa
+    minReplicas: 1
+    maxReplicas: 1
+    model:
+      modelFormat:
+        name: sklearn-otel
+        version: "1"
+      runtime: iris-otel-runtime
+      storageUri: s3://pipeline-artifacts-iris/models/iris_model/2026-07-09-194918/
+      resources:
+        requests:
+          cpu: 250m
+          memory: 512Mi
+        limits:
+          cpu: "1"
+          memory: 1Gi
